@@ -12,7 +12,7 @@ client.on("ready", async () => {
   // Do Stuff
   await stuff();
 
-  client.destroy();
+  await client.destroy();
   process.exit(0);
 });
 
