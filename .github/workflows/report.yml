@@ -14,6 +14,9 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4
 
+      - name: Start ClamAV daemon clamd
+        uses: toblux/start-clamd-github-action@v0.2.1
+
       - name: Write GitHub event to file
         run: echo '${{ toJson(github.event) }}' > event.json
 
@@ -25,4 +28,4 @@ jobs:
           node issue.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          WEBHOOK: ${{ secrets.WEBHOOK_URL }}
