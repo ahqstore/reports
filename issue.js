@@ -43,6 +43,11 @@ async function stuff() {
   const url = event.issue.url || "";
 
   /**
+   * @type {string}
+   */
+  const username = event.issue.user.login || "";
+
+  /**
    * @type {number}
    */
   const number = event.issue.number;
@@ -55,16 +60,19 @@ async function stuff() {
 
   const bodyRegex = /---ISSUE---\n([\s\S]*?)\n---END---/;
 
+  const prsed = bodyRegex.exec(body)?.at(1) || "<impossible>";
   /**
    * @type {{ appId: string } | "<impossible>"}
    */
   const bodyParsed = (() => {
     try {
-      return JSON.parse(bodyRegex.exec(body)?.at(1) || "<impossible>");
+      return JSON.parse(prsed);
     } catch (_) {
       return "<impossible>";
     }
   })();
+
+  const otherBody = body.replace(prsed, "");
 
   if (!bodyRegex.test(body) || bodyParsed == "<impossible>") {
     await github.rest.issues.createComment({
@@ -140,6 +148,8 @@ async function stuff() {
       `
       Report for ${app.data.appDisplayName} (${app.data.appId})
 
+      **Reported by:** \`@${username}\`
+
       **App Name:** ${app.data.appDisplayName}
       **App ID:** ${app.data.appId}
       **App Version:** ${app.data.verified}
@@ -155,6 +165,8 @@ async function stuff() {
       **Linked GitHub Issue:** ${url}
       
       > **Reference Issue Number:** ${number}
+
+      ${otherBody.substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
     `
     )
     .toJSON();
