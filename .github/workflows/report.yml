@@ -1,0 +1,28 @@
+name: Handle Application Report
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+
+      - name: Write GitHub event to file
+        run: echo '${{ toJson(github.event) }}' > event.json
+
+      - name: Installing Dependencies and run bot
+        run: |
+          npm i -g pnpm
+          pnpm install
+
+          node issue.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}

@@ -1,0 +1,30 @@
+name: Handle issues
+
+on:
+  # push:
+  schedule:
+    # Every 10 minutes
+    - cron: "*/10 * * * *"
+
+permissions: write-all
+
+jobs:
+  handle:
+    name: Handle Issues
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Installing Dependencies and run bot
+        run: |
+          npm i -g pnpm
+          pnpm install
+          node .
