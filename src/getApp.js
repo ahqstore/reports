@@ -1,4 +1,3 @@
-const { InstallerFormat } = require("ahqstore-types");
 const { owner, repo } = require("./getSha");
 
 module.exports = async (sha, app) => {
@@ -28,22 +27,22 @@ module.exports = async (sha, app) => {
     let file = `${i}.bin`;
 
     switch (typ) {
-      case InstallerFormat.AndroidApkZip:
+      case 5:
         file = `${i}.apk`;
         break;
-      case InstallerFormat.LinuxAppImage:
+      case 4:
         file = `${i}.AppImage`;
         break;
-      case InstallerFormat.WindowsInstallerExe:
+      case 2:
         file = `${i}.exe`;
         break;
-      case InstallerFormat.WindowsInstallerMsi:
+      case 1:
         file = `${i}.msi`;
         break;
-      case InstallerFormat.WindowsUWPMsix:
+      case 3:
         file = `${i}.msix`;
         break;
-      case InstallerFormat.WindowsZip:
+      case 0:
         file = `${i}.zip`;
         break;
     }
