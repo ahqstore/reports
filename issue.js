@@ -212,6 +212,10 @@ async function download(file) {
       method: "GET",
       url: file.url,
       responseType: "stream",
+      headers: {
+        "User-Agent": "AHQ Store Issues Bot",
+        "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
     }).then((s) => s.data.pipe(f));
 
     f.on("finish", () => {
@@ -257,7 +261,12 @@ const checkAppId = async (github, appId, number) => {
     }
 
     const sha = await getSha();
+
+    console.log(`Got SHA: ${sha}, AppID: ${appId}`);
+
     const app = await getApp(sha, appId);
+
+    console.log(`Got Application: ${app}`);
 
     return app;
   } catch (e) {
