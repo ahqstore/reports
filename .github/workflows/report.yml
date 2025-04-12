@@ -22,12 +22,6 @@ jobs:
 
           sudo freshclam
 
-          sudo systemctl stop clamav-daemon.service
-          sudo rm /var/log/clamav/freshclam.log
-          sudo systemctl start clamav-daemon.service
-
-          sudo freshclam
-
       - name: Write GitHub event to file
         uses: actions/github-script@v7
         with:
