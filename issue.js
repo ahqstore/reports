@@ -261,7 +261,7 @@ const checkAppId = async (github, appId, number) => {
 
     return app;
   } catch (e) {
-    await err("Unknown Error.... ${e}");
+    await err(`Unknown Error.... ${e}`);
     return false;
   }
 };
