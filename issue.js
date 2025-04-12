@@ -62,7 +62,7 @@ async function stuff() {
 
   const prsed = bodyRegex.exec(body)?.at(1) || "<impossible>";
   /**
-   * @type {{ appId: string } | "<impossible>"}
+   * @type {{ appId: string, os?: string } | "<impossible>"}
    */
   const bodyParsed = (() => {
     try {
@@ -119,7 +119,7 @@ async function stuff() {
 
   // @formatter:off
   // prettier-ignore
-  const stats = `| Statistics     |                                                           |
+  const stats = `| Statistics     |                                                               |
 | -------------- | ------------------------------------------------------------- |
 | Total Files    | ${badFiles.length + goodFiles.length}                         |
 | Total Infected | **${badFiles.length}**/${badFiles.length + goodFiles.length}  |
@@ -149,7 +149,9 @@ async function stuff() {
       Report for ${app.data.appDisplayName} (${app.data.appId})
 
       **Reported by:** \`@${username}\`
+      **OS:** ${bodyParsed.os || "Unknown"}
 
+      ## Application Details
       **App Name:** ${app.data.appDisplayName}
       **App ID:** ${app.data.appId}
       **App Version:** ${app.data.verified}
