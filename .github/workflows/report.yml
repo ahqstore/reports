@@ -113,5 +113,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         continue-on-error: true
         with:
-          pull: true
+          add: .
           message: "Update Reports"
