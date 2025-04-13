@@ -123,8 +123,8 @@ async function stuff() {
   for (let i = 0; i < 10; i++) {
     try {
       await ping();
-      await delay(1000);
     } catch (e) {
+      await delay(10_000);
       console.log(e);
     }
   }

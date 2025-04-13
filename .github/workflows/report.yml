@@ -32,9 +32,12 @@ jobs:
           sudo systemctl stop clamav-freshclam.service
           sudo freshclam || true
           sudo systemctl start clamav-freshclam.service
-          sudo systemctl stop clamav-daemon.service
 
-          sudo clamd & true
+          sudo mkdir /var/run/clamd.scan
+
+          sudo chown clamscan:clamscan /var/run/clamd.scan
+
+          sudo systemctl restart clamd@scan
 
           npm i -g pnpm
           pnpm install
