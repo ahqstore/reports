@@ -136,4 +136,5 @@ dist
 .pnp.*
 
 infected
+event.json
 oldscan.json
