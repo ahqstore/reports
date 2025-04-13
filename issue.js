@@ -16,6 +16,7 @@ const event = require("./event.json");
 const getSha = require("./src/getSha");
 const getApp = require("./src/getApp");
 const { EmbedBuilder } = require("discord.js");
+const downloadFiles = require("./src/downloadFiles");
 
 const owner = "ahqstore";
 const repo = "reports";
@@ -231,18 +232,6 @@ _Waiting for Windows Defender Outputs_
 
 /**
  *
- * @param {{ url: string, file: string }[]} files
- */
-const downloadFiles = async (files) => {
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-
-    await download(file);
-  }
-};
-
-/**
- *
  * @param {{ url: string, file: string }} file
  * @returns
  */
@@ -312,7 +301,7 @@ const checkAppId = async (github, appId, number) => {
 
     return app;
   } catch (e) {
-    await err(`Unknown Error.... ${e}`);
+    await err(`Application Not Found!\n\n# Trace\n${e}`);
     return false;
   }
 };

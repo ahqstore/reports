@@ -68,3 +68,6 @@ jobs:
 
       - name: Update Windows Defender
         run: C:\"Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate
+
+      - name: Test Scan
+        run: C:\"Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 3 -File ./src/*

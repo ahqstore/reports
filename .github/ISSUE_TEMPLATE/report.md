@@ -6,7 +6,7 @@ title: "[Report]: "
 
 ---ISSUE---
 {
-"appId": "<insert appid only from community repository>,
+"appId": "<insert appid only from community repository>",
 "os": "<insert your os name, windows, linux or android>"
 }
 ---END---
