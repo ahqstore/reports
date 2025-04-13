@@ -47,11 +47,17 @@ const getEmbed = async (data) => {
      */
     const json = require(`./database/${report}`);
 
-    const msgs = await discordApi(
+    /**
+     * @type {Object[]}
+     */
+    let msgs = await discordApi(
       "GET",
-      `/channels/${json.threadId}/messages?after=${json.lastMsgId}&limit=2`,
+      `/channels/${json.threadId}/messages?after=${json.lastMsgId}`,
       null
     );
+
+    msgs.reverse();
+    msgs = msgs.filter((s) => !s?.author?.bot);
 
     console.log(json.msg, msgs);
 
