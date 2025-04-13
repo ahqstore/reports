@@ -17,8 +17,7 @@ jobs:
       - name: Install ClamAV and start daemon
         run: |
           sudo apt-get update
-          sudo apt-get install clamav
-          sudo apt-get install clamav-daemon
+          sudo apt-get install clamav clamav-daemon
 
       - name: Write GitHub event to file
         uses: actions/github-script@v7
@@ -30,6 +29,8 @@ jobs:
 
       - name: Installing Dependencies and run bot
         run: |
+          sudo freshclam || true
+          sudo clamd & true
           npm i -g pnpm
           pnpm install
 
