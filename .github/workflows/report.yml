@@ -95,7 +95,11 @@ jobs:
             fs.writeFileSync("./oldscan.json", process.env.DATA);
 
       - name: Run
+        shell: pwsh
         run: |
+          Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
+          Set-Service -Name wuauserv -StartupType Manual -Status Running
+
           npm i -g pnpm
           pnpm install
 
