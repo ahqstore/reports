@@ -233,6 +233,7 @@ async function download(file) {
       headers: {
         "User-Agent": "AHQ Store Issues Bot",
         "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
+        "Content-Type": "application/json",
       },
     }).then((s) => s.data.pipe(f));
 

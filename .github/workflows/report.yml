@@ -32,7 +32,9 @@ jobs:
           sudo systemctl stop clamav-freshclam.service
           sudo freshclam || true
           sudo systemctl start clamav-freshclam.service
-          sudo systemctl start clamav-daemon.service
+          sudo systemctl stop clamav-daemon.service
+
+          sudo clamd & true
 
           npm i -g pnpm
           pnpm install
