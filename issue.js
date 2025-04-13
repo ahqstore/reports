@@ -48,7 +48,7 @@ async function stuff() {
       bypassTest: false, // Check to see if socket is available when applicable
       tls: false, // Use plaintext TCP to connect to clamd
     },
-    preference: "clamdscan", // If clamdscan is found and active, it will be used by default
+    preference: "clamscan", // If clamdscan is found and active, it will be used by default
   });
 
   const ping = () => av.ping();
