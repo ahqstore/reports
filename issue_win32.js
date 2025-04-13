@@ -184,7 +184,10 @@ const repo = "reports";
   await fetch(webhook, {
     method: "POST",
     body: JSON.stringify({
-      content: isInfected ? `<@&1245401644733169724>` : `New Report`,
+      content:
+        isInfected || win32.isInfected
+          ? `<@&1245401644733169724> <@&1142141595555205190>`
+          : `New Report`,
       embeds: [embed],
     }),
     headers: {
