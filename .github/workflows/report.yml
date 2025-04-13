@@ -1,6 +1,7 @@
 name: Handle Application Report
 
 on:
+  push:
   issues:
     types: [opened]
 
@@ -33,11 +34,7 @@ jobs:
           sudo freshclam || true
           sudo systemctl start clamav-freshclam.service
 
-          sudo mkdir /var/run/clamd.scan
-
-          sudo chown clamscan:clamscan /var/run/clamd.scan
-
-          sudo systemctl restart clamd@scan
+          sudo /etc/init.d/clamav-daemon start
 
           npm i -g pnpm
           pnpm install
