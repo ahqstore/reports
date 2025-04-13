@@ -178,13 +178,15 @@ async function stuff() {
    */
   const webhook = process.env.WEBHOOK || "";
 
-  await fetch(webhook, {
+  const data = await fetch(webhook, {
     method: "POST",
     body: JSON.stringify({
       content: isInfected ? `<@&1245401644733169724>` : `New Report`,
       embeds: [embed],
     }),
-  });
+  }).then((d) => d.json());
+
+  console.log(data, webhook.length);
 }
 
 /**
