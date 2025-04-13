@@ -102,8 +102,12 @@ const repo = "reports";
   | Total Scanned  | ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                |
   | Total Infected | **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}  |
   | Total Skipped  | **${win32.skipped.length}**                                                     |
-  | Viruses        | **${win32.viruses.join(", ")}**                                                 |
   | Infected       | **${win32.isInfected ? "⚠️ Yes" : "✅ No"}**                                    |
+
+  ${win32.viruses.length == 0 ? "" : `## Windows Defender Viruses
+    \`\`\`
+    ${win32.viruses.join("\n")}
+    \`\`\``}
  
  *This issue is now being transferred to our **Moderation Team***`;
 
@@ -166,8 +170,13 @@ const repo = "reports";
       > **Total Files**:    ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                         
       > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}  
       > **Total Skipped**:  **${win32.skipped}**
-      > **Viruses**:        **${win32.viruses.join(", ")}**                                     
       > **Infected**:       **${win32.isInfected ? "⚠️ Yes" : "✅ No"}**
+
+
+      ${win32.viruses.length == 0 ? "" : `## Windows Defender Viruses
+      \`\`\`
+      ${win32.viruses.join("\n")}
+      \`\`\``}
       
       **Linked GitHub Issue:** ${url}
 
