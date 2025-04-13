@@ -1,1 +1,1 @@
-const statusRegex = /^@(complete|unplanned|progress|false)$/;
+const statusRegex = /^@(progress|unplanned|false|resolved)$/;

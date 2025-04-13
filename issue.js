@@ -136,9 +136,9 @@ async function stuff() {
     body: "Scanning for Malware using ClamAV...",
   });
 
-  const { badFiles, goodFiles, isInfected, viruses } = await av.scanDir(
-    "./infected"
-  );
+  const { badFiles, goodFiles, viruses } = await av.scanDir("./infected");
+
+  const isInfected = badFiles.length > 0;
 
   writeFileSync(
     "./oldscan.json",
