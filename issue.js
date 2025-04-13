@@ -24,6 +24,9 @@ async function stuff() {
   const av = await new NodeClam().init({
     debugMode: true,
     scanRecursively: true,
+    clamdscan: {
+      reloadDb: true,
+    },
   });
 
   const { Octokit } = await import("@octokit/rest");
@@ -112,6 +115,19 @@ async function stuff() {
     repo,
     body: "Scanning for Malware using ClamAV...",
   });
+
+  const ping = () => av.ping();
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  // Keep trying 10times
+  for (let i = 0; i < 10; i++) {
+    try {
+      await ping();
+      await delay(1000);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const { badFiles, goodFiles, isInfected, viruses } = await av.scanDir(
     "./infected"
