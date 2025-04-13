@@ -26,6 +26,10 @@ async function stuff() {
     scanRecursively: true,
     clamdscan: {
       reloadDb: true,
+      host: "localhost",
+      port: 3310,
+      active: true,
+      multiscan: true,
     },
   });
 
