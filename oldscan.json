@@ -1,9 +1,1 @@
-{
-  "clamav": {
-    "goodFiles": [],
-    "badFiles": [],
-    "isInfected": false,
-    "viruses": []
-  },
-  "number": 20
-}
+{"clamav":{"badFiles":[],"goodFiles":["/home/runner/work/reports/reports/infected/0.zip","/home/runner/work/reports/reports/infected/1.msi","/home/runner/work/reports/reports/infected/2.AppImage"],"viruses":[]},"number":2799997815}
