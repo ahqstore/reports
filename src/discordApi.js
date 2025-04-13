@@ -25,5 +25,13 @@ module.exports = async (method, url, body, reason = "") => {
       "Authorization": `Bot ${process.env.BOT_TOKEN}`,
       "X-Audit-Log-Reason": reason,
     },
-  }).then((d) => d.json());
+  })
+    .then((d) => d.text())
+    .then((d) => {
+      try {
+        return JSON.parse(d);
+      } catch (_e) {
+        return d;
+      }
+    });
 };
