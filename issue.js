@@ -164,6 +164,7 @@ async function stuff() {
 | Viruses        | **${viruses.join(", ")}**                                     |
 | Infected       | **${isInfected ? "⚠️ Yes" : "✅ No"}**                        |
 
+_Waiting for Windows Defender Outputs_
 *This issue is now being transferred to our **Moderation Team***`;
 
   await github.rest.issues.updateComment({

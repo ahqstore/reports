@@ -6,7 +6,9 @@ on:
     types: [opened]
 
 jobs:
-  report:
+  clamav:
+    name: ClamAV Scan
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -51,3 +53,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+
+  windows:
+    runs-on: windows-latest
+
+    name: Scan using Windows Defender
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+
+      - name: Update Windows Defender
+        run: C:\"Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate
