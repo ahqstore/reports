@@ -49,7 +49,7 @@ const getEmbed = async (data) => {
 
     const msgs = await discordApi(
       "GET",
-      `/channels/${json.threadId}/messages?after=${json.lastMsgId}&limit=100`,
+      `/channels/${json.threadId}/messages?after=${json.lastMsgId}&limit=2`,
       null
     );
 
@@ -60,7 +60,5 @@ const getEmbed = async (data) => {
     //  */
     // const embed = await getEmbed(json);
     // embed.description = json.diagMsg.replace("<status>", "");
-
-    console.log(json);
   }
 })();
