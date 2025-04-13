@@ -29,6 +29,19 @@ async function stuff() {
     },
   });
 
+  const ping = () => av.ping();
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  // Keep trying 10times
+  for (let i = 0; i < 10; i++) {
+    try {
+      await ping();
+    } catch (e) {
+      await delay(10_000);
+      console.log(e);
+    }
+  }
+
   const { Octokit } = await import("@octokit/rest");
   const github = new Octokit({
     auth: process.env.GITHUB_TOKEN,
@@ -115,19 +128,6 @@ async function stuff() {
     repo,
     body: "Scanning for Malware using ClamAV...",
   });
-
-  const ping = () => av.ping();
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
-  // Keep trying 10times
-  for (let i = 0; i < 10; i++) {
-    try {
-      await ping();
-    } catch (e) {
-      await delay(10_000);
-      console.log(e);
-    }
-  }
 
   const { badFiles, goodFiles, isInfected, viruses } = await av.scanDir(
     "./infected"
