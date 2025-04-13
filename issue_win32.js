@@ -146,18 +146,17 @@ const repo = "reports";
     })
     .setColor(isInfected ? "Red" : "Yellow")
     .setDescription(
-      `
-      Report for ${app.data.appDisplayName} (${app.data.appId})
+      `Report for ${app.data.appDisplayName} (${app.data.appId})
 
       **Reported by:** \`@${username}\`
       **OS:** ${bodyParsed.os || "Unknown"}
 
       ## Application Details
-      **App Name:** ${app.data.appDisplayName}
-      **App ID:** ${app.data.appId}
-      **App Version:** ${app.data.verified}
-      **Author:** ${app.data.authorId}
-      **Repository:** https://github.com/${app.data.repo.author}/${app.data.repo.repo}
+      > **App Name:** ${app.data.appDisplayName}
+      > **App ID:** ${app.data.appId}
+      > **App Version:** ${app.data.verified}
+      > **Author:** ${app.data.authorId}
+      > **Repository:** https://github.com/${app.data.repo.author}/${app.data.repo.repo}
       
       ## ClamAV Report
       > **Total Files**:    ${badFiles.length + goodFiles.length}                         
@@ -165,15 +164,12 @@ const repo = "reports";
       > **Viruses**:        **${viruses.join(", ")}**                                     
       > **Infected**:       **${isInfected ? "⚠️ Yes" : "✅ No"}**  
 
-
       ## Windows Defender Report
       > **Total Files**:    ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                         
-      > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}  
-      > **Total Skipped**:  **${win32.skipped}**
+      > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}
+      > **Total Skipped**:  **${win32.skipped.length}**
       > **Infected**:       **${win32.isInfected ? "⚠️ Yes" : "✅ No"}**
-
-
-      ${win32.viruses.length == 0 ? "" : `## Windows Defender Viruses
+      ${win32.viruses.length == 0 ? "" : `\n## Windows Defender Viruses
       \`\`\`
       ${win32.viruses.join("\n")}
       \`\`\``}
