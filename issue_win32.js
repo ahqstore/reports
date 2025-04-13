@@ -235,7 +235,7 @@ async function scanWindowsDefender(file) {
   for (const index in files) {
     const file = files[index];
 
-    const out = await scanWindows(resolve(__filename, "infected", file));
+    const out = await scanWindows(resolve(__dirname, "infected", file));
 
     const output = out.out;
 
