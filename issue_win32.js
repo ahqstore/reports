@@ -161,6 +161,7 @@ const repo = "reports";
       > **Viruses**:        **${viruses.join(", ")}**                                     
       > **Infected**:       **${isInfected ? "⚠️ Yes" : "✅ No"}**  
 
+
       ## Windows Defender Report
       > **Total Files**:    ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                         
       > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}  
@@ -170,7 +171,7 @@ const repo = "reports";
       
       **Linked GitHub Issue:** ${url}
 
-      ${otherBody.substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
+      ${otherBody.trim().substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
     `
     )
     .toJSON();
