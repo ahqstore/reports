@@ -139,7 +139,7 @@ const repo = "reports";
   // prettier-ignore
   const embed = new EmbedBuilder()
     .setTitle(`Severity: ${!(isInfected || win32.isInfected) ? "⚒️ Low" : "⚠️ Severe"}`)
-    .setURL(url)
+    .setURL(`https://github.com/ahqstore/reports/issues/${number}`)
     .setFooter({
       text: `Reference Issue Number: ${number}`,
       iconURL: "https://github.com/ahqstore.png",
@@ -178,10 +178,10 @@ const repo = "reports";
       ${win32.viruses.join("\n")}
       \`\`\``}
       
-      **Linked GitHub Issue:** ${url}
+      **Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/${number}
 
       ${otherBody.trim().substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
-    `
+    `.split("\n").map((x) => x.trim()).join("\n")
     )
     .toJSON();
 
