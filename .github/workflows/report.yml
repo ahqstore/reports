@@ -105,3 +105,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+          BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+
+      - name: Update Database
+        uses: EndBug/add-and-commit@v9
+        continue-on-error: true
+        with:
+          pull: true
+          message: "Update Reports"

@@ -2,17 +2,16 @@
 
 const { resolve } = require("path");
 const scanWindows = require("./src/scanWindows");
-const { readdirSync, mkdirSync, readFileSync } = require("fs");
+const { readdirSync, mkdirSync, writeFileSync } = require("fs");
 
 /**
  * @type {any}
  */
 const event = require("./event.json");
-const getSha = require("./src/getSha");
-const getApp = require("./src/getApp");
 const { EmbedBuilder } = require("discord.js");
 const downloadFiles = require("./src/downloadFiles");
 const checkAppId = require("./src/checkAppId");
+const discordApi = require("./src/discordApi");
 
 const owner = "ahqstore";
 const repo = "reports";
@@ -28,11 +27,6 @@ const repo = "reports";
    * @type {string}
    */
   const body = event.issue.body || "";
-
-  /**
-   * @type {string}
-   */
-  const url = event.issue.url || "";
 
   /**
    * @type {string}
@@ -137,6 +131,42 @@ const repo = "reports";
   });
 
   // prettier-ignore
+  const diag = `Report for ${app.data.appDisplayName} (${app.data.appId})
+
+  **Current Status:** <status>
+
+  **Reported by:** \`@${username}\`
+  **OS:** ${bodyParsed.os || "Unknown"}
+
+  ## Application Details
+  > **App Name:** ${app.data.appDisplayName}
+  > **App ID:** ${app.data.appId}
+  > **App Version:** ${app.data.verified}
+  > **Author:** ${app.data.authorId}
+  > **Repository:** https://github.com/${app.data.repo.author}/${app.data.repo.repo}
+  
+  ## ClamAV Report
+  > **Total Files**:    ${badFiles.length + goodFiles.length}                         
+  > **Total Infected**: **${badFiles.length}**/${badFiles.length + goodFiles.length}  
+  > **Viruses**:        **${viruses.join(", ")}**                                     
+  > **Infected**:       **${isInfected ? "⚠️ Yes" : "✅ No"}**  
+
+  ## Windows Defender Report
+  > **Total Files**:    ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                         
+  > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}
+  > **Total Skipped**:  **${win32.skipped.length}**
+  > **Infected**:       **${win32.isInfected ? "⚠️ Yes" : "✅ No"}**
+  ${win32.viruses.length == 0 ? "" : `\n## Windows Defender Viruses
+  \`\`\`
+  ${win32.viruses.join("\n")}
+  \`\`\``}
+  
+  **Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/${number}
+
+  ${otherBody.trim().substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
+`.split("\n").map((x) => x.trim()).join("\n");
+
+  // prettier-ignore
   const embed = new EmbedBuilder()
     .setTitle(`Severity: ${!(isInfected || win32.isInfected) ? "⚒️ Low" : "⚠️ Severe"}`)
     .setURL(`https://github.com/ahqstore/reports/issues/${number}`)
@@ -146,38 +176,7 @@ const repo = "reports";
     })
     .setColor(isInfected ? "Red" : "Yellow")
     .setDescription(
-      `Report for ${app.data.appDisplayName} (${app.data.appId})
-
-      **Reported by:** \`@${username}\`
-      **OS:** ${bodyParsed.os || "Unknown"}
-
-      ## Application Details
-      > **App Name:** ${app.data.appDisplayName}
-      > **App ID:** ${app.data.appId}
-      > **App Version:** ${app.data.verified}
-      > **Author:** ${app.data.authorId}
-      > **Repository:** https://github.com/${app.data.repo.author}/${app.data.repo.repo}
-      
-      ## ClamAV Report
-      > **Total Files**:    ${badFiles.length + goodFiles.length}                         
-      > **Total Infected**: **${badFiles.length}**/${badFiles.length + goodFiles.length}  
-      > **Viruses**:        **${viruses.join(", ")}**                                     
-      > **Infected**:       **${isInfected ? "⚠️ Yes" : "✅ No"}**  
-
-      ## Windows Defender Report
-      > **Total Files**:    ${win32.badFiles.length + win32.goodFiles.length}/${win32.total}                         
-      > **Total Infected**: **${win32.badFiles.length}**/${win32.badFiles.length + win32.goodFiles.length}
-      > **Total Skipped**:  **${win32.skipped.length}**
-      > **Infected**:       **${win32.isInfected ? "⚠️ Yes" : "✅ No"}**
-      ${win32.viruses.length == 0 ? "" : `\n## Windows Defender Viruses
-      \`\`\`
-      ${win32.viruses.join("\n")}
-      \`\`\``}
-      
-      **Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/${number}
-
-      ${otherBody.trim().substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
-    `.split("\n").map((x) => x.trim()).join("\n")
+      diag.replace("<status>", "🔍 Investigating")
     )
     .toJSON();
 
@@ -186,19 +185,71 @@ const repo = "reports";
    */
   const webhook = process.env.WEBHOOK || "";
 
-  await fetch(webhook, {
-    method: "POST",
-    body: JSON.stringify({
-      content:
-        isInfected || win32.isInfected
-          ? `<@&1245401644733169724> <@&1142141595555205190>`
-          : `New Report`,
-      embeds: [embed],
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const msg = await discordApi("POST", `${webhook}?wait=true`, {
+    content:
+      isInfected || win32.isInfected
+        ? `<@&1245401644733169724> <@&1142141595555205190>`
+        : `New Report`,
+    embeds: [embed],
   });
+
+  console.log(msg);
+
+  const data = await discordApi(
+    "POST",
+    `/channels/${msg.channel_id}/messages/${msg.id}/threads`,
+    {
+      name: "Logs & Comments",
+    }
+  );
+
+  console.log(data);
+
+  const threadMsg = await discordApi("POST", `/channels/${data.id}/messages`, {
+    content:
+      `👋🏼 Hello Review Team! I am **AHQ Store Bot**. Every message in this thread will _eventually_ be transferred to the linked GitHub issue.
+    
+    You can annotate your messages with the following tags (the tags **might** be used in the 1st line of the message)
+
+    @progress
+    > This sends a specialized \`in-progress\` message in the GitHub Issue
+    > Also edits the message with the status \`🩹 Remedy in Progress\`
+
+    @unplanned
+    > This closes the related GitHub issue as \`unplanned\`
+    > Edits the message with the status \`❌ Unplanned\`
+
+    @false
+    > This closes the related GitHub issue as \`false positive\`
+    > Edits the message with the status \`🚫 False Positive\`
+
+    @resolve
+    > This closes the related GitHub issue as \`resolved\`
+    > Edits the message with the status \`✅ Resolved\`
+    `
+        .split("\n")
+        .map((x) => x.trim())
+        .join("\n"),
+  });
+
+  console.log(threadMsg);
+
+  writeFileSync(
+    `./database/report_${number}.json`,
+    JSON.stringify(
+      {
+        msg: msg.id,
+        issue: number,
+        timestamp: Date.now(),
+        threadId: data.id,
+        lastMsgId: threadMsg.id,
+        diagMsg: diag,
+        lastUpdate: Date.now(),
+      },
+      null,
+      2
+    )
+  );
 })();
 
 /**
