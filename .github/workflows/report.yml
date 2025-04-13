@@ -29,8 +29,11 @@ jobs:
 
       - name: Installing Dependencies and run bot
         run: |
+          sudo systemctl stop clamav-freshclam.service
           sudo freshclam || true
-          sudo clamd & true
+          sudo systemctl start clamav-freshclam.service
+          sudo systemctl start clamav-daemon.service
+
           npm i -g pnpm
           pnpm install
 
