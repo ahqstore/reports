@@ -1,7 +1,6 @@
 name: Handle Application Report
 
 on:
-  push:
   issues:
     types: [opened]
 
@@ -80,9 +79,6 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4
 
-      - name: Update Windows Defender
-        run: C:\"Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate
-
       - name: Write GitHub event to file
         uses: actions/github-script@v7
         env:
@@ -99,6 +95,8 @@ jobs:
         run: |
           Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Set-Service -Name wuauserv -StartupType Manual -Status Running
+
+          C:\"Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate
 
           npm i -g pnpm
           pnpm install
