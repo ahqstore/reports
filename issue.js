@@ -36,8 +36,8 @@ async function stuff() {
     },
     clamdscan: {
       socket: false, // Socket file for connecting via TCP
-      host: false, // IP of host to connect to TCP interface
-      port: false, // Port of host to use when connecting via TCP interface
+      host: "localhost", // IP of host to connect to TCP interface
+      port: 3310, // Port of host to use when connecting via TCP interface
       timeout: 60000, // Timeout for scanning files
       localFallback: true, // Use local preferred binary to scan if socket/tcp fails
       path: "/usr/bin/clamdscan", // Path to the clamdscan binary on your server
