@@ -200,6 +200,9 @@ async function stuff() {
       content: isInfected ? `<@&1245401644733169724>` : `New Report`,
       embeds: [embed],
     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   }).then((d) => d.json());
 
   console.log(data, webhook.length);
