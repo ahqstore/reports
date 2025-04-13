@@ -19,12 +19,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clamav clamav-daemon
-          sudo freshclam
 
       - name: Start ClamAV daemon
         run: |
           sudo systemctl start clamav-daemon
           sudo systemctl status clamav-daemon || journalctl -xe
+          sudo freshclam || true
 
       - name: Wait for clamd to be ready
         run: |
