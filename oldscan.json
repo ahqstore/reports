@@ -1,0 +1,9 @@
+{
+  "clamav": {
+    "goodFiles": [],
+    "badFiles": [],
+    "isInfected": false,
+    "viruses": []
+  },
+  "number": 20
+}

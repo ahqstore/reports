@@ -1,5 +1,5 @@
-//@s-check
-
+// @ts-check
+const { createWriteStream } = require("fs");
 const axios = require("axios");
 
 /**

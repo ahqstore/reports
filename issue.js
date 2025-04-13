@@ -1,6 +1,6 @@
 // @ts-check
 const NodeClam = require("clamscan");
-const { mkdirSync, createWriteStream } = require("fs");
+const { mkdirSync, writeFileSync } = require("fs");
 
 (async () => {
   // Do Stuff
@@ -11,10 +11,8 @@ const { mkdirSync, createWriteStream } = require("fs");
  * @type {any}
  */
 const event = require("./event.json");
-const getSha = require("./src/getSha");
-const getApp = require("./src/getApp");
-const { EmbedBuilder } = require("discord.js");
 const downloadFiles = require("./src/downloadFiles");
+const checkAppId = require("./src/checkAppId");
 
 const owner = "ahqstore";
 const repo = "reports";
@@ -75,16 +73,6 @@ async function stuff() {
   const body = event.issue.body || "";
 
   /**
-   * @type {string}
-   */
-  const url = event.issue.url || "";
-
-  /**
-   * @type {string}
-   */
-  const username = event.issue.user.login || "";
-
-  /**
    * @type {number}
    */
   const number = event.issue.number;
@@ -108,8 +96,6 @@ async function stuff() {
       return "<impossible>";
     }
   })();
-
-  const otherBody = body.replace(prsed, "");
 
   if (!bodyRegex.test(body) || bodyParsed == "<impossible>") {
     await github.rest.issues.createComment({
@@ -154,17 +140,30 @@ async function stuff() {
     "./infected"
   );
 
+  writeFileSync(
+    "./oldscan.json",
+    JSON.stringify({
+      clamav: {
+        badFiles,
+        goodFiles,
+        isInfected,
+        viruses,
+      },
+      number,
+    })
+  );
+
   // @formatter:off
   // prettier-ignore
-  const stats = `| Statistics     |                                                               |
+  const stats = `# ClamAV
+| Statistics     |                                                               |
 | -------------- | ------------------------------------------------------------- |
 | Total Files    | ${badFiles.length + goodFiles.length}                         |
 | Total Infected | **${badFiles.length}**/${badFiles.length + goodFiles.length}  |
 | Viruses        | **${viruses.join(", ")}**                                     |
 | Infected       | **${isInfected ? "⚠️ Yes" : "✅ No"}**                        |
 
-_Waiting for Windows Defender Outputs_
-*This issue is now being transferred to our **Moderation Team***`;
+_Waiting for Windows Defender Scan Results_`;
 
   await github.rest.issues.updateComment({
     comment_id: resp.data.id,
@@ -172,109 +171,4 @@ _Waiting for Windows Defender Outputs_
     repo,
     body: stats,
   });
-
-  // prettier-ignore
-  const embed = new EmbedBuilder()
-    .setTitle(`Severity: ${!isInfected ? "⚒️ Low" : "⚠️ Severe"}`)
-    .setURL(url)
-    .setFooter({
-      text: "Report by AHQ Store Issues Bot",
-      iconURL: "https://github.com/ahqstore.png",
-    })
-    .setColor(isInfected ? "Red" : "Yellow")
-    .setDescription(
-      `
-      Report for ${app.data.appDisplayName} (${app.data.appId})
-
-      **Reported by:** \`@${username}\`
-      **OS:** ${bodyParsed.os || "Unknown"}
-
-      ## Application Details
-      **App Name:** ${app.data.appDisplayName}
-      **App ID:** ${app.data.appId}
-      **App Version:** ${app.data.verified}
-      **Author:** ${app.data.authorId}
-      **Repository:** https://github.com/${app.data.repo.author}/${app.data.repo.repo}
-      
-      ## Malware Report
-      > **Total Files**:    ${badFiles.length + goodFiles.length}                         
-      > **Total Infected**: **${badFiles.length}**/${badFiles.length + goodFiles.length}  
-      > **Viruses**:        **${viruses.join(", ")}**                                     
-      > **Infected**:       **${isInfected ? "⚠️ Yes" : "✅ No"}**  
-      
-      **Linked GitHub Issue:** ${url}
-      
-      > **Reference Issue Number:** ${number}
-
-      ${otherBody.substring(0, 1000)}${otherBody.length > 1000 ? "..." : ""}
-    `
-    )
-    .toJSON();
-
-  /**
-   * @type {string}
-   */
-  const webhook = process.env.WEBHOOK || "";
-
-  await fetch(webhook, {
-    method: "POST",
-    body: JSON.stringify({
-      content: isInfected ? `<@&1245401644733169724>` : `New Report`,
-      embeds: [embed],
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 }
-
-/**
- *
- * @param {import("@octokit/rest").Octokit} github
- * @param {string} appId
- * @param {number} number
- * @returns {Promise<{ data: import("ahqstore-types").AHQStoreApplication, urls: { url: string, file: string }[] } | false>}
- */
-const checkAppId = async (github, appId, number) => {
-  /**
-   *
-   * @param {string} msg
-   */
-  const err = async (msg) => {
-    await github.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: number,
-      body: msg,
-    });
-    await github.rest.issues.update({
-      owner,
-      repo,
-      issue_number: number,
-      state: "closed",
-      state_reason: "not_planned",
-    });
-  };
-
-  try {
-    if (appId.length <= 1 || appId.includes(":")) {
-      await err(
-        "The App ID is not valid or does not point to the **community** repository."
-      );
-      return false;
-    }
-
-    const sha = await getSha();
-
-    console.log(`Got SHA: ${sha}, AppID: ${appId}`);
-
-    const app = await getApp(sha, appId);
-
-    console.log(`Got Application: ${app}`);
-
-    return app;
-  } catch (e) {
-    await err(`Application Not Found!\n\n# Trace\n${e}`);
-    return false;
-  }
-};

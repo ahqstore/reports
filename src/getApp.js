@@ -22,27 +22,30 @@ module.exports = async (sha, app) => {
   const urls = [];
 
   Object.values(data.downloadUrls).forEach((data, i) => {
+    /**
+     * @type {string}
+     */
     const typ = data.installerType;
 
     let file = `${i}.bin`;
 
     switch (typ) {
-      case 5:
+      case "AndroidApkZip":
         file = `${i}.apk`;
         break;
-      case 4:
+      case "LinuxAppImage":
         file = `${i}.AppImage`;
         break;
-      case 2:
+      case "WindowsInstallerExe":
         file = `${i}.exe`;
         break;
-      case 1:
+      case "WindowsInstallerMsi":
         file = `${i}.msi`;
         break;
-      case 3:
+      case "WindowsUWPMsix":
         file = `${i}.msix`;
         break;
-      case 0:
+      case "WindowsZip":
         file = `${i}.zip`;
         break;
     }
