@@ -90,7 +90,7 @@ const getEmbed = async (data) => {
         console.warn(e);
 
         await discordApi(
-          "POST",
+          "PUT",
           `/channels/${json.threadId}/messages/${msg.id}/reactions/❌/@me`,
           {}
         );
