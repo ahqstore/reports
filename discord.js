@@ -20,7 +20,7 @@ const getEmbed = async (data) => {
     await discordApi(
       "GET",
       `/channels/1360259132439007281/messages/${data.msg}`,
-      {}
+      null
     )
   ).embeds[0];
 };
@@ -50,7 +50,7 @@ const getEmbed = async (data) => {
     const msgs = await discordApi(
       "GET",
       `/channels/${json.threadId}/messages?after=${json.lastMsgId}&limit=100`,
-      {}
+      null
     );
 
     console.log(json.msg, msgs);

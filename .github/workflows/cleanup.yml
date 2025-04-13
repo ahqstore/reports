@@ -1,6 +1,7 @@
 name: Handle issues
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     # Every 10 minutes
