@@ -1,7 +1,7 @@
 name: Handle issues
 
 on:
-  # push:
+  workflow_dispatch:
   schedule:
     # Every 10 minutes
     - cron: "*/10 * * * *"
@@ -27,4 +27,16 @@ jobs:
         run: |
           npm i -g pnpm
           pnpm install
-          node .
+
+          node discord.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+          BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+
+      - name: Update Database
+        uses: EndBug/add-and-commit@v9
+        continue-on-error: true
+        with:
+          add: .
+          message: "Update Reports"

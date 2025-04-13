@@ -245,6 +245,7 @@ const repo = "reports";
         lastMsgId: threadMsg.id,
         diagMsg: diag,
         lastUpdate: Date.now(),
+        oldEmbed: embed,
       },
       null,
       2
