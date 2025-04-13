@@ -1,7 +1,6 @@
 name: Handle Application Report
 
 on:
-  push:
   issues:
     types: [opened]
 
