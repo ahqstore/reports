@@ -26,6 +26,12 @@ const getEmbed = async (data) => {
 };
 
 (async () => {
+  const { Octokit } = await import("@octokit/rest");
+  const github = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+    userAgent: "AHQ Store Issues Bot",
+  });
+
   writeFileSync("./lastrun", Date.now().toString());
 
   const reports = readdirSync("./database").filter((s) => s != ".gitkeep");
@@ -57,9 +63,39 @@ const getEmbed = async (data) => {
     );
 
     msgs.reverse();
-    msgs = msgs.filter((s) => !s?.author?.bot);
 
-    console.log(json.msg, msgs);
+    msgs = msgs
+      .map((x) => {
+        const sterilize = /<(@|#)[!&0-9a-zA-Z]*> ?/g;
+
+        return {
+          ...x,
+          content: x.content.replace(sterilize, ""),
+        };
+      })
+      .filter((s) => !s?.author?.bot && s.content.trim().length != 0);
+
+    for (const index in msgs) {
+      const msg = msgs[index];
+
+      try {
+        throw new Error("Test");
+        await github.rest.issues.createComment({
+          owner: "ahqstore",
+          repo: "reports",
+          issue_number: json.issue,
+          body: `@${msg.author.username}\n${msg.content}`,
+        });
+      } catch (e) {
+        console.warn(e);
+
+        await discordApi(
+          "POST",
+          `/channels/${json.threadId}/messages/${msg.id}/reactions/❌/@me`,
+          {}
+        );
+      }
+    }
 
     // /**
     //  * @type {import("discord.js").APIEmbed}
