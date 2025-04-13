@@ -75,17 +75,25 @@ const getEmbed = async (data) => {
       })
       .filter((s) => !s?.author?.bot && s.content.trim().length != 0);
 
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
     for (const index in msgs) {
       const msg = msgs[index];
 
       try {
         throw new Error("Test");
+
         await github.rest.issues.createComment({
           owner: "ahqstore",
           repo: "reports",
           issue_number: json.issue,
           body: `@${msg.author.username}\n${msg.content}`,
         });
+        await discordApi(
+          "PUT",
+          `/channels/${json.threadId}/messages/${msg.id}/reactions/✅/@me`,
+          {}
+        );
       } catch (e) {
         console.warn(e);
 
@@ -95,6 +103,8 @@ const getEmbed = async (data) => {
           {}
         );
       }
+
+      await delay(100);
     }
 
     // /**
