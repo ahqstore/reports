@@ -1,6 +1,4 @@
 // @ts-check
-const axios = require("axios");
-
 const NodeClam = require("clamscan");
 const { mkdirSync, createWriteStream } = require("fs");
 
@@ -227,31 +225,6 @@ _Waiting for Windows Defender Outputs_
     headers: {
       "Content-Type": "application/json",
     },
-  });
-}
-
-/**
- *
- * @param {{ url: string, file: string }} file
- * @returns
- */
-async function download(file) {
-  return new Promise((res) => {
-    const f = createWriteStream(`./infected/${file.file}`);
-
-    axios({
-      method: "GET",
-      url: file.url,
-      responseType: "stream",
-      headers: {
-        "User-Agent": "AHQ Store Issues Bot",
-        "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
-      },
-    }).then((s) => s.data.pipe(f));
-
-    f.on("finish", () => {
-      res(undefined);
-    });
   });
 }
 
