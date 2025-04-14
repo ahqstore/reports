@@ -209,20 +209,27 @@ const getEmbed = async (data) => {
         const body = normalizeContent(msg.content);
 
         if (body.content == false) {
+          await discordApi(
+            "PUT",
+            `/channels/${json.threadId}/messages/${msg.id}/reactions/🤫/@me`,
+            {}
+          );
           continue;
         }
 
-        await github.rest.issues.createComment({
-          owner: "ahqstore",
-          repo: "reports",
-          issue_number: json.issue,
-          body: `@${msg.author.username} says:\n\n${body.content}`,
-        });
-        await discordApi(
-          "PUT",
-          `/channels/${json.threadId}/messages/${msg.id}/reactions/📩/@me`,
-          {}
-        );
+        if (body.content.length > 0) {
+          await github.rest.issues.createComment({
+            owner: "ahqstore",
+            repo: "reports",
+            issue_number: json.issue,
+            body: `@${msg.author.username} says:\n\n${body.content}`,
+          });
+          await discordApi(
+            "PUT",
+            `/channels/${json.threadId}/messages/${msg.id}/reactions/📩/@me`,
+            {}
+          );
+        }
 
         closed = closed || (await body.postSendMsg(json));
       } catch (e) {
