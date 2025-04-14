@@ -1,10 +1,8 @@
 // @ts-check
 
-const { EmbedBuilder } = require("discord.js");
 const {
   readdirSync,
   writeFileSync,
-  copyFileSync,
   mkdirSync,
   rmSync,
   readFileSync,
