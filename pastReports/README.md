@@ -6,7 +6,6 @@ The current list is as follows :-
 
 | Issue Number | Issue Title | Directory |
 | ------------ | ----------- | --------- |
-
 | [#30](https://github.com/ahqstore/reports/issues/30) | [Report]: Joke | https://github.com/ahqstore/reports/tree/main/pastReports/report_30 |
 
 ## How it works

@@ -28,7 +28,8 @@ const addNew = (issue) => {
     })
     .join("\n");
 
-  return `${currentTable}\n| [#${issue.number}](https://github.com/ahqstore/reports/issues/${issue.number}) | ${issue.title} | https://github.com/ahqstore/reports/tree/main/pastReports/report_${issue.number} |`;
+  // prettier-ignore
+  return `${currentTable}${currentTable.length > 0 ? "\n" : ""}| [#${issue.number}](https://github.com/ahqstore/reports/issues/${issue.number}) | ${issue.title} | https://github.com/ahqstore/reports/tree/main/pastReports/report_${issue.number} |`;
 };
 
 /**
