@@ -1,0 +1,37 @@
+name: Handle Application Report
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: write-all
+
+jobs:
+  redirect:
+    name: Send to Discord (if not Robot)
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+
+      - name: Write GitHub event to file
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            fs.writeFileSync("./event.json", JSON.stringify(context.payload));
+
+      - name: Installing Dependencies and run bot
+        run: |
+          npm i -g pnpm
+          pnpm install
+
+          node comment.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBHOOK: ${{ secrets.WEBHOOK_URL }}

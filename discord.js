@@ -54,6 +54,116 @@ const getEmbed = async (data) => {
     const json = require(`./database/${report}`);
 
     /**
+     *
+     * @param {string} content
+     * @returns {{ content: string, postSendMsg: (j: typeof json) => Promise<boolean> }}
+     */
+    const normalizeContent = (content) => {
+      const splits = content.split("\n").map((x) => x.trim());
+
+      const first = splits[0];
+
+      /**
+       * @type {"progress" | "unplanned" | "false" | "resolved" | undefined}
+       */
+      let typ = undefined;
+
+      if (statusRegex.test(first)) {
+        const exec = statusRegex.exec(first) || [];
+
+        if (exec.length > 0) {
+          // @ts-ignore
+          typ = exec[1];
+        }
+      }
+
+      return {
+        content: (() => {
+          if (typ) {
+            return splits.slice(1).join("\n");
+          }
+
+          return content;
+        })(),
+        postSendMsg: async (json) => {
+          if (typ) {
+            const embed = await getEmbed(json);
+
+            /**
+             * @type {{
+             *  [key in "false" | "progress" | "unplanned" | "resolved"]: {
+             *    state?: "closed" | "open",
+             *    state_reason?: "not_planned" | "completed",
+             *    labels: string[] | undefined,
+             *    embedBody: string
+             *  }
+             * }}
+             */
+            const updateMap = {
+              false: {
+                state: "closed",
+                state_reason: "not_planned",
+                labels: ["false positive"],
+                embedBody: json.diagMsg.replace(
+                  "<status>",
+                  "🚫 False Positive"
+                ),
+              },
+              progress: {
+                state: "open",
+                labels: ["in progress"],
+                embedBody: json.diagMsg.replace(
+                  "<status>",
+                  "🩹 Remedy in Progress"
+                ),
+              },
+              unplanned: {
+                state: "closed",
+                state_reason: "not_planned",
+                labels: ["unplanned"],
+                embedBody: json.diagMsg.replace("<status>", "❌ Unplanned"),
+              },
+              resolved: {
+                state: "closed",
+                state_reason: "completed",
+                labels: ["resolved"],
+                embedBody: json.diagMsg.replace("<status>", "✅ Resolved"),
+              },
+            };
+
+            const { embedBody, labels, state, state_reason } = updateMap[typ];
+
+            await github.rest.issues.update({
+              owner: "ahqstore",
+              repo: "reports",
+              issue_number: json.issue,
+              state,
+              state_reason,
+              labels,
+            });
+
+            await discordApi(
+              "PATCH",
+              `${process.env["WEBHOOK"]}/messages/${json.msg}`,
+              {
+                embeds: [
+                  {
+                    ...embed,
+                    description: embedBody,
+                  },
+                ],
+              }
+            );
+
+            return state == "closed";
+          }
+
+          return false;
+        },
+      };
+    };
+
+    /**
      * @type {Object[]}
      */
     let msgs = await discordApi(
@@ -77,23 +187,32 @@ const getEmbed = async (data) => {
 
     const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+    if (msgs.length > 0) {
+      json.lastMsgId = msgs[msgs.length - 1];
+      json.lastUpdate = Date.now();
+    }
+
+    let closed = false;
+
     for (const index in msgs) {
       const msg = msgs[index];
 
       try {
-        throw new Error("Test");
+        const body = normalizeContent(msg.content);
 
         await github.rest.issues.createComment({
           owner: "ahqstore",
           repo: "reports",
           issue_number: json.issue,
-          body: `@${msg.author.username}\n${msg.content}`,
+          body: `@${msg.author.username} says:\n\n${body}`,
         });
         await discordApi(
           "PUT",
-          `/channels/${json.threadId}/messages/${msg.id}/reactions/✅/@me`,
+          `/channels/${json.threadId}/messages/${msg.id}/reactions/📩/@me`,
           {}
         );
+
+        closed = closed || (await body.postSendMsg(json));
       } catch (e) {
         console.warn(e);
 
@@ -104,7 +223,13 @@ const getEmbed = async (data) => {
         );
       }
 
-      await delay(100);
+      if (closed) {
+        // We'll do stuff later
+      } else {
+        writeFileSync(`./database/${report}`, JSON.stringify(json, null, 2));
+      }
+
+      await delay(50);
     }
 
     // /**

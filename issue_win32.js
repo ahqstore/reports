@@ -130,6 +130,13 @@ const repo = "reports";
     body: stats,
   });
 
+  await github.rest.issues.update({
+    owner,
+    repo,
+    issue_number: number,
+    labels: ["investigating"],
+  });
+
   // prettier-ignore
   const diag = `Report for ${app.data.appDisplayName} (${app.data.appId})
 
