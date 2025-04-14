@@ -3,62 +3,7 @@
   "issue": 30,
   "timestamp": 1744558299278,
   "threadId": "1361000891934572657",
-  "lastMsgId": {
-    "type": 0,
-    "content": "Hi",
-    "mentions": [],
-    "mention_roles": [],
-    "attachments": [],
-    "embeds": [],
-    "timestamp": "2025-04-14T15:53:10.847000+00:00",
-    "edited_timestamp": null,
-    "flags": 0,
-    "components": [],
-    "id": "1361368698991939698",
-    "channel_id": "1361000891934572657",
-    "author": {
-      "id": "745175427533766726",
-      "username": "yourjaildev",
-      "avatar": "fb66427c67b82abaf921da24effee61d",
-      "discriminator": "0",
-      "public_flags": 4194368,
-      "flags": 4194368,
-      "banner": null,
-      "accent_color": null,
-      "global_name": "YourJailDev",
-      "avatar_decoration_data": {
-        "asset": "a_291f95e35311551eddc4ad6fc9423dca",
-        "sku_id": "1347624589571788951",
-        "expires_at": 1747440000
-      },
-      "collectibles": null,
-      "banner_color": null,
-      "clan": null,
-      "primary_guild": null
-    },
-    "pinned": false,
-    "mention_everyone": false,
-    "tts": false,
-    "position": 11,
-    "reactions": [
-      {
-        "emoji": {
-          "id": null,
-          "name": "❌"
-        },
-        "count": 1,
-        "count_details": {
-          "burst": 0,
-          "normal": 1
-        },
-        "burst_colors": [],
-        "me_burst": false,
-        "burst_me": false,
-        "me": true,
-        "burst_count": 0
-      }
-    ]
-  },
+  "lastMsgId": "1361368698991939698",
   "diagMsg": "Report for VSCodium (a:vscodium)\n\n**Current Status:** <status>\n\n**Reported by:** `@ahqsoftwares`\n**OS:** Windows 11\n\n## Application Details\n> **App Name:** VSCodium\n> **App ID:** a:vscodium\n> **App Version:** true\n> **Author:** a:2\n> **Repository:** https://github.com/VSCodium/vscodium\n\n## ClamAV Report\n> **Total Files**:    3\n> **Total Infected**: **0**/3\n> **Viruses**:        ****\n> **Infected**:       **✅ No**\n\n## Windows Defender Report\n> **Total Files**:    3/3\n> **Total Infected**: **0**/3\n> **Total Skipped**:  **0**\n> **Infected**:       **✅ No**\n\n\n**Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/30\n\n<-- No matter what OS you choose. We'll scan the application binaries for every os architecture -->\n\n## Describe the problem\n\nThis is actually a test\n\n## Steps to reproduce\n\n- NONE\n",
   "lastUpdate": 1744646647708
 }

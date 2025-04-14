@@ -199,7 +199,7 @@ const getEmbed = async (data) => {
     let closed = false;
 
     for (const index in msgs) {
-      const msg = msgs[index];
+      const msg = msgs[index].id;
 
       try {
         const body = normalizeContent(msg.content);
