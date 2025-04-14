@@ -31,6 +31,11 @@ const repo = "reports";
   /**
    * @type {string}
    */
+  const title = event.issue.title || "";
+
+  /**
+   * @type {string}
+   */
   const username = event.issue.user.login || "";
 
   /**
@@ -250,6 +255,7 @@ const repo = "reports";
       {
         msg: msg.id,
         issue: number,
+        issueTitle: title,
         timestamp: Date.now(),
         threadId: data.id,
         lastMsgId: threadMsg.id,

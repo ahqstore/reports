@@ -1,10 +1,35 @@
 // @ts-check
 
 const { EmbedBuilder } = require("discord.js");
-const { readdirSync, writeFileSync } = require("fs");
+const {
+  readdirSync,
+  writeFileSync,
+  copyFileSync,
+  mkdirSync,
+  rmSync,
+  readFileSync,
+} = require("fs");
 const discordApi = require("./src/discordApi");
 
 const statusRegex = /^@(progress|unplanned|false|resolved|ignore)$/;
+
+/**
+ * @param {{ number: number, title: string }} issue
+ */
+const addNew = (issue) => {
+  const currentTable = readdirSync("./pastReports")
+    .filter((x) => !x.endsWith(".md"))
+    .map((x) => {
+      const { number, title } = JSON.parse(
+        readFileSync(`./pastReports/${x}/issue.json`).toString()
+      );
+
+      return `| [#${number}](https://github.com/ahqstore/reports/issues/${number}) | ${title} | https://github.com/ahqstore/reports/tree/main/pastReports/${x} |`;
+    })
+    .join("\n");
+
+  return `${currentTable}\n| [#${issue.number}](https://github.com/ahqstore/reports/issues/${issue.number}) | ${issue.title} | https://github.com/ahqstore/reports/tree/main/pastReports/report_${issue.number} |`;
+};
 
 /**
  *
@@ -43,6 +68,7 @@ const getEmbed = async (data) => {
      * @type {{
      *  msg: string;
      *  issue: number;
+     *  issueTitle?: string;
      *  timestamp: number;
      *  threadId: string;
      *  lastMsgId: string;
@@ -243,18 +269,62 @@ const getEmbed = async (data) => {
       }
 
       if (closed) {
-        // We'll do stuff later
+        const getTitle = async () => {
+          if (json.issueTitle) {
+            return json.issueTitle;
+          }
+
+          return (
+            await github.rest.issues.get({
+              owner: "ahqstore",
+              repo: "reports",
+              issue_number: json.issue,
+            })
+          ).data.title;
+        };
+
+        const readme = readFileSync(`./pastReports/README_TMPL.md`).toString();
+        const tableTemplate = "| template     |             |           |";
+
+        const title = await getTitle();
+
+        const newReadme = readme.replace(
+          tableTemplate,
+          addNew({
+            number: json.issue,
+            title,
+          })
+        );
+
+        mkdirSync(`./pastReports/${report}`);
+        copyFileSync(`./database/${report}`, `./pastReports/${report}`);
+        rmSync(`./database/${report}`);
+
+        writeFileSync("./pastReports/README.md", newReadme);
+        writeFileSync(
+          `./pastReports/${report}/issue.json`,
+          JSON.stringify(
+            {
+              number: json.issue,
+              title,
+            },
+            null,
+            2
+          )
+        );
+
+        writeFileSync(
+          `./pastReports/${report}/README.md`,
+          json.diagMsg.replace(
+            "<status>",
+            `[Refer to the issue](https://github.com/ahqstore/reports/issues/${json.issue})`
+          )
+        );
       } else {
         writeFileSync(`./database/${report}`, JSON.stringify(json, null, 2));
       }
 
       await delay(50);
     }
-
-    // /**
-    //  * @type {import("discord.js").APIEmbed}
-    //  */
-    // const embed = await getEmbed(json);
-    // embed.description = json.diagMsg.replace("<status>", "");
   }
 })();
