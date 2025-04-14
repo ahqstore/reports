@@ -192,14 +192,14 @@ const getEmbed = async (data) => {
     const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
     if (msgs.length > 0) {
-      json.lastMsgId = msgs[msgs.length - 1];
+      json.lastMsgId = msgs[msgs.length - 1].id;
       json.lastUpdate = Date.now();
     }
 
     let closed = false;
 
     for (const index in msgs) {
-      const msg = msgs[index].id;
+      const msg = msgs[index];
 
       try {
         const body = normalizeContent(msg.content);
