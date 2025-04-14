@@ -218,6 +218,9 @@ const repo = "reports";
     
     You can annotate your messages with the following tags (the tags **might** be used in the 1st line of the message)
 
+    @ignore
+    > The message will not be sent to GitHub
+
     @progress
     > This sends a specialized \`in-progress\` message in the GitHub Issue
     > Also edits the message with the status \`🩹 Remedy in Progress\`

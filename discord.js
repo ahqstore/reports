@@ -4,7 +4,7 @@ const { EmbedBuilder } = require("discord.js");
 const { readdirSync, writeFileSync } = require("fs");
 const discordApi = require("./src/discordApi");
 
-const statusRegex = /^@(progress|unplanned|false|resolved)$/;
+const statusRegex = /^@(progress|unplanned|false|resolved|ignore)$/;
 
 /**
  *
@@ -56,7 +56,7 @@ const getEmbed = async (data) => {
     /**
      *
      * @param {string} content
-     * @returns {{ content: string, postSendMsg: (j: typeof json) => Promise<boolean> }}
+     * @returns {{ content: false | string, postSendMsg: (j: typeof json) => Promise<boolean> }}
      */
     const normalizeContent = (content) => {
       const splits = content.split("\n").map((x) => x.trim());
@@ -64,7 +64,7 @@ const getEmbed = async (data) => {
       const first = splits[0];
 
       /**
-       * @type {"progress" | "unplanned" | "false" | "resolved" | undefined}
+       * @type {"progress" | "unplanned" | "false" | "resolved" | "ignore" | undefined}
        */
       let typ = undefined;
 
@@ -79,6 +79,10 @@ const getEmbed = async (data) => {
 
       return {
         content: (() => {
+          if (typ == "ignore") {
+            return false;
+          }
+
           if (typ) {
             return splits.slice(1).join("\n");
           }
@@ -203,6 +207,10 @@ const getEmbed = async (data) => {
 
       try {
         const body = normalizeContent(msg.content);
+
+        if (body.content == false) {
+          continue;
+        }
 
         await github.rest.issues.createComment({
           owner: "ahqstore",
