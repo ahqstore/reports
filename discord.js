@@ -204,7 +204,7 @@ const getEmbed = async (data) => {
           owner: "ahqstore",
           repo: "reports",
           issue_number: json.issue,
-          body: `@${msg.author.username} says:\n\n${body}`,
+          body: `@${msg.author.username} says:\n\n${body.content}`,
         });
         await discordApi(
           "PUT",
