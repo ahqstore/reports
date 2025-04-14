@@ -172,6 +172,10 @@ const getEmbed = async (data) => {
       null
     );
 
+    if (!Array.isArray(msgs)) {
+      continue;
+    }
+
     msgs.reverse();
 
     msgs = msgs
