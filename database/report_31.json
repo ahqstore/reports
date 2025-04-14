@@ -1,0 +1,20 @@
+{
+  "msg": "1361385928668745728",
+  "issue": 31,
+  "issueTitle": "[Report]: Joke Version 2",
+  "timestamp": 1744650099860,
+  "threadId": "1361385928668745728",
+  "lastMsgId": "1361385932984553735",
+  "diagMsg": "Report for VSCodium (a:vscodium)\n\n**Current Status:** <status>\n\n**Reported by:** `@ahqsoftwares`\n**OS:** Windows 11\n\n## Application Details\n> **App Name:** VSCodium\n> **App ID:** a:vscodium\n> **App Version:** true\n> **Author:** a:2\n> **Repository:** https://github.com/VSCodium/vscodium\n\n## ClamAV Report\n> **Total Files**:    3\n> **Total Infected**: **0**/3\n> **Viruses**:        ****\n> **Infected**:       **✅ No**\n\n## Windows Defender Report\n> **Total Files**:    3/3\n> **Total Infected**: **0**/3\n> **Total Skipped**:  **0**\n> **Infected**:       **✅ No**\n\n\n**Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/31\n\n<-- No matter what OS you choose. We'll scan the application binaries for every os architecture -->\n\n## Describe the problem\n\nThis is actually a test\n\n## Steps to reproduce\n\n- NONE\n",
+  "lastUpdate": 1744650099860,
+  "oldEmbed": {
+    "title": "Severity: ⚒️ Low",
+    "url": "https://github.com/ahqstore/reports/issues/31",
+    "footer": {
+      "text": "Reference Issue Number: 31",
+      "icon_url": "https://github.com/ahqstore.png"
+    },
+    "color": 16705372,
+    "description": "Report for VSCodium (a:vscodium)\n\n**Current Status:** 🔍 Investigating\n\n**Reported by:** `@ahqsoftwares`\n**OS:** Windows 11\n\n## Application Details\n> **App Name:** VSCodium\n> **App ID:** a:vscodium\n> **App Version:** true\n> **Author:** a:2\n> **Repository:** https://github.com/VSCodium/vscodium\n\n## ClamAV Report\n> **Total Files**:    3\n> **Total Infected**: **0**/3\n> **Viruses**:        ****\n> **Infected**:       **✅ No**\n\n## Windows Defender Report\n> **Total Files**:    3/3\n> **Total Infected**: **0**/3\n> **Total Skipped**:  **0**\n> **Infected**:       **✅ No**\n\n\n**Linked GitHub Issue:** https://github.com/ahqstore/reports/issues/31\n\n<-- No matter what OS you choose. We'll scan the application binaries for every os architecture -->\n\n## Describe the problem\n\nThis is actually a test\n\n## Steps to reproduce\n\n- NONE\n"
+  }
+}
