@@ -296,13 +296,12 @@ const getEmbed = async (data) => {
           })
         );
 
-        mkdirSync(`./pastReports/${report}`);
-        copyFileSync(`./database/${report}`, `./pastReports/${report}`);
+        mkdirSync(`./pastReports/report_${json.issue}`);
         rmSync(`./database/${report}`);
 
         writeFileSync("./pastReports/README.md", newReadme);
         writeFileSync(
-          `./pastReports/${report}/issue.json`,
+          `./pastReports/report_${json.issue}/issue.json`,
           JSON.stringify(
             {
               number: json.issue,
@@ -314,7 +313,7 @@ const getEmbed = async (data) => {
         );
 
         writeFileSync(
-          `./pastReports/${report}/README.md`,
+          `./pastReports/report_${json.issue}/README.md`,
           json.diagMsg.replace(
             "<status>",
             `[Refer to the issue](https://github.com/ahqstore/reports/issues/${json.issue})`
