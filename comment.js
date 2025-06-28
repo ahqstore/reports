@@ -7,6 +7,7 @@ const discordApi = require("./src/discordApi");
 const event = require("./event.json");
 
 (async () => {
+  console.log(event);
   const report = existsSync(`./database/report_${event.issue.number}`);
 
   if (report) {
