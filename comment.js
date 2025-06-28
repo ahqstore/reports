@@ -8,7 +8,7 @@ const event = require("./event.json");
 
 (async () => {
   console.log(event);
-  const report = existsSync(`./database/report_${event.issue.number}`);
+  const report = existsSync(`./database/report_${event.issue.number}.json`);
 
   if (report) {
     /**
@@ -24,7 +24,7 @@ const event = require("./event.json");
      *  oldEmbed?: Object;
      * }}
      */
-    const json = require(`./database/report_${event.issue.number}`);
+    const json = require(`./database/report_${event.issue.number}.json`);
 
     /**
      * @type {string}
