@@ -8,6 +8,7 @@ The current list is as follows :-
 | ------------ | ----------- | --------- |
 | [#30](https://github.com/ahqstore/reports/issues/30) | [Report]: Joke | https://github.com/ahqstore/reports/tree/main/pastReports/report_30 |
 | [#31](https://github.com/ahqstore/reports/issues/31) | [Report]: Joke Version 2 | https://github.com/ahqstore/reports/tree/main/pastReports/report_31 |
+| [#33](https://github.com/ahqstore/reports/issues/33) | [Report]: Testing | https://github.com/ahqstore/reports/tree/main/pastReports/report_33 |
 
 ## How it works
 
